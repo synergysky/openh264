@@ -11,10 +11,12 @@ set -o errexit -o nounset
 OPENH264_VERSION="1.8.0"
 OPENH264_SERVER="http://ciscobinary.openh264.org"
 
+LIB_DIR=/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`
+
 LIB_VERSION="4"
 LIB_FILE="libopenh264-${OPENH264_VERSION}-linux64.${LIB_VERSION}.so"
-LIB_PATH="/usr/lib/x86_64-linux-gnu/libopenh264.so.${LIB_VERSION}"
-LIB_LINK="/usr/lib/x86_64-linux-gnu/libopenh264.so"
+LIB_PATH="${LIB_DIR}/libopenh264.so.${LIB_VERSION}"
+LIB_LINK="${LIB_DIR}/libopenh264.so"
 
 BZ2_FILE="libopenh264-${OPENH264_VERSION}-linux64.${LIB_VERSION}.so.bz2"
 BZ2_HASH="0b879e4ba40df21b44c2531d343b6fb1f44b35176d4780ecb48dcab7f75f6779"
