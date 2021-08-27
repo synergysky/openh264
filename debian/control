@@ -1,6 +1,7 @@
 Source: openh264
 Priority: optional
 Maintainer: Kurento <kurento@googlegroups.com>
+Uploaders: Daniel Pocock <daniel@pocock.pro>
 Build-Depends: debhelper (>= 9),
  cmake,
  pkg-config

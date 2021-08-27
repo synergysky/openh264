@@ -8,7 +8,7 @@
 # Bash options for strict error checking
 set -o errexit -o nounset
 
-OPENH264_VERSION="1.8.0"
+OPENH264_VERSION="2.1.1"
 OPENH264_SERVER="http://ciscobinary.openh264.org"
 
 ARCH_NAME="linux64"
@@ -26,7 +26,7 @@ esac
 
 LIB_DIR=/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`
 
-LIB_VERSION="4"
+LIB_VERSION="6"
 LIB_FILE="libopenh264-${OPENH264_VERSION}-${ARCH_NAME}.${LIB_VERSION}.so"
 LIB_PATH="${LIB_DIR}/libopenh264.so.${LIB_VERSION}"
 LIB_LINK="${LIB_DIR}/libopenh264.so"

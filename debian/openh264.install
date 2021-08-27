@@ -1,1 +1,1 @@
-codec/api/svc/*.h /usr/include/wels/
+codec/api/svc/*.h /usr/include/openh264/

@@ -1,3 +1,11 @@
+openh264 (2.1.1-1) sid; urgency=medium
+
+  * Update for latest upstream release.
+  * Update for multiarch.
+  * Use a local copy of the plugin binary if available in /tmp
+
+ -- Daniel Pocock <daniel@pocock.pro>  Fri, 27 Aug 2021 18:51:25 +0200
+
 openh264 (1.8.0-0kurento1) UNRELEASED; urgency=medium
 
   * debian/control: Add install dependency: 'wget'
