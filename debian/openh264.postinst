@@ -11,14 +11,27 @@ set -o errexit -o nounset
 OPENH264_VERSION="1.8.0"
 OPENH264_SERVER="http://ciscobinary.openh264.org"
 
+ARCH_NAME="linux64"
+case `uname -m` in
+  x86_64)
+    ;;
+  ppc64le)
+    ARCH_NAME="ppc64le"
+    ;;
+  *)
+    echo "Unsupported architecture `uname -m`"
+    exit 1
+    ;;
+esac
+
 LIB_DIR=/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`
 
 LIB_VERSION="4"
-LIB_FILE="libopenh264-${OPENH264_VERSION}-linux64.${LIB_VERSION}.so"
+LIB_FILE="libopenh264-${OPENH264_VERSION}-${ARCH_NAME}.${LIB_VERSION}.so"
 LIB_PATH="${LIB_DIR}/libopenh264.so.${LIB_VERSION}"
 LIB_LINK="${LIB_DIR}/libopenh264.so"
 
-BZ2_FILE="libopenh264-${OPENH264_VERSION}-linux64.${LIB_VERSION}.so.bz2"
+BZ2_FILE="libopenh264-${OPENH264_VERSION}-${ARCH_NAME}.${LIB_VERSION}.so.bz2"
 BZ2_HASH="0b879e4ba40df21b44c2531d343b6fb1f44b35176d4780ecb48dcab7f75f6779"
 
 [ -f "$BZ2_FILE" ] && rm "$BZ2_FILE"
@@ -93,20 +106,27 @@ echo "+ Wait 3 seconds before continuing"
 
 sleep 3
 
-echo "+ Download OpenH264 library from Cisco server"
+if [ -f /tmp/${LIB_FILE} ];
+then
+    cp /tmp/${LIB_FILE} "$LIB_PATH"
+else
 
-wget "${OPENH264_SERVER}/${BZ2_FILE}"
+    echo "+ Download OpenH264 library from Cisco server"
 
-echo "+ Extract and install OpenH264 library"
+    wget "${OPENH264_SERVER}/${BZ2_FILE}"
 
-echo "$BZ2_HASH  $BZ2_FILE" | sha256sum --check >/dev/null 2>&1 || {
-    echo "SHA256 mismatch on $BZ2_FILE"
-    exit 1
-}
+    echo "+ Extract and install OpenH264 library"
 
-bzip2 --decompress --keep "$BZ2_FILE"
+    echo "$BZ2_HASH  $BZ2_FILE" | sha256sum --check >/dev/null 2>&1 || {
+        echo "SHA256 mismatch on $BZ2_FILE"
+        exit 1
+    }
 
-cp "$LIB_FILE" "$LIB_PATH"
+    bzip2 --decompress --keep "$BZ2_FILE"
+
+    cp "$LIB_FILE" "$LIB_PATH"
+fi
+
 ln -s "$LIB_PATH" "$LIB_LINK"
 
 echo "$LIB_PATH" >>/var/lib/dpkg/info/openh264.list
