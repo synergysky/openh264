@@ -1,3 +1,15 @@
+openh264 (2.1.1-2~debify11+1) debify-bullseye; urgency=medium
+
+  * Update SHA-256 checksum for 2.1.1 on amd64.
+
+ -- Daniel Pocock <daniel@pocock.pro>  Fri, 03 Sep 2021 00:58:50 +0200
+
+openh264 (2.1.1-1~debify11+1) debify-bullseye; urgency=medium
+
+  * Build for debify-buster.
+
+ -- Daniel Pocock <daniel@pocock.pro>  Thu, 02 Sep 2021 16:21:49 +0200
+
 openh264 (2.1.1-1) sid; urgency=medium
 
   * Update for latest upstream release.
