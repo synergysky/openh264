@@ -1,3 +1,9 @@
+openh264 (2.1.1-3~debify11+1) debify-bullseye; urgency=medium
+
+  * Remove dpkg-architecture from postinst.
+
+ -- Daniel Pocock <daniel@pocock.pro>  Wed, 15 Sep 2021 11:49:20 +0200
+
 openh264 (2.1.1-2~debify11+1) debify-bullseye; urgency=medium
 
   * Update SHA-256 checksum for 2.1.1 on amd64.

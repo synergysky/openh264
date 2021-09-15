@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
-
+LIB_VERSION="6"
+BZ2_HASH="6d4f42c9d8e414c072c65c9b0f0df361deee4227824f1e012a9f60f79673b44d"
 
 # Shell setup
 # -----------
@@ -11,28 +12,38 @@ set -o errexit -o nounset
 OPENH264_VERSION="2.1.1"
 OPENH264_SERVER="http://ciscobinary.openh264.org"
 
-ARCH_NAME="linux64"
-case `uname -m` in
-  x86_64)
+ARCH_NAME=none
+case ${DPKG_MAINTSCRIPT_ARCH} in
+  i*86)
+    ARCH_NAME=linux32
+    LIB_DIR=/usr/lib/i386-linux-gnu
     ;;
-  ppc64le)
-    ARCH_NAME="ppc64le"
+  amd64)
+    ARCH_NAME=linux64
+    LIB_DIR=/usr/lib/x86_64-linux-gnu
+    ;;
+  ppc64el)
+    ARCH_NAME=ppc64le
+    LIB_DIR=/usr/lib/powerpc64le-linux-gnu
     ;;
   *)
-    echo "Unsupported architecture `uname -m`"
-    exit 1
+    ARCH_NAME=`uname -m`
+    LIB_DIR=/usr/lib
+    echo "Possibly unsupported architecture ${DPKG_MAINTSCRIPT_ARCH}, trying anyway"
     ;;
 esac
 
-LIB_DIR=/usr/lib/`dpkg-architecture -qDEB_HOST_MULTIARCH`
+if [ ! -d ${LIB_DIR} ];
+then
+  echo "LIB_DIR ${LIB_DIR} does not exist, aborting"
+  exit 1
+fi
 
-LIB_VERSION="6"
 LIB_FILE="libopenh264-${OPENH264_VERSION}-${ARCH_NAME}.${LIB_VERSION}.so"
 LIB_PATH="${LIB_DIR}/libopenh264.so.${LIB_VERSION}"
 LIB_LINK="${LIB_DIR}/libopenh264.so"
 
-BZ2_FILE="libopenh264-${OPENH264_VERSION}-${ARCH_NAME}.${LIB_VERSION}.so.bz2"
-BZ2_HASH="6d4f42c9d8e414c072c65c9b0f0df361deee4227824f1e012a9f60f79673b44d"
+BZ2_FILE="${LIB_FILE}.bz2"
 
 [ -f "$BZ2_FILE" ] && rm "$BZ2_FILE"
 [ -f "$LIB_FILE" ] && rm "$LIB_FILE"
@@ -117,10 +128,16 @@ else
 
     echo "+ Extract and install OpenH264 library"
 
-    echo "$BZ2_HASH  $BZ2_FILE" | sha256sum --check >/dev/null 2>&1 || {
-        echo "SHA256 mismatch on $BZ2_FILE"
-        exit 1
-    }
+    if [ $ARCH_NAME = linux64 ];
+    then
+        echo "$BZ2_HASH  $BZ2_FILE" | sha256sum --check >/dev/null 2>&1 || {
+            echo "SHA256 mismatch on $BZ2_FILE"
+            exit 1
+        }
+    else
+        # FIXME
+        echo "WARNING: not verifying checksum on downloaded plugin"
+    fi
 
     bzip2 --decompress --keep "$BZ2_FILE"
 
